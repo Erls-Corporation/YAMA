@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+	  xmlns:fb="https://www.facebook.com/2008/fbml"
+	  xml:lang="<%=langtag(I18n.locale)%>" lang="<%=langtag(I18n.locale)%>">
+<head<%= raw " prefix=\"#{@head_prefix}\"" if @head_prefix%>>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="music player, audio player, mp3 player, free music player, free audio player, free mp3 player, stoffiplayer, stoffi" />
+    <meta name="description" content="<%=@description%>" />
+    <meta name="copyright" content="Simplare" />
+	<meta name="content-language" content="<%=langtag(I18n.locale)%>" />
+
+	<title><%= title %></title>
+	
+	<% if @file && @autodownload %>
+		<meta http-equiv="Refresh" Content="2;URL=https://www.stoffiplayer.com<%=@file%>" />
+	<% end %>
+	
+	<%
+	if @meta_tags
+		@meta_tags.each do |meta_tag|
+			if meta_tag[:content] && meta_tag[:content] != ""
+				%>
+				<meta property="<%=meta_tag[:property].to_s%>" content="<%=meta_tag[:content].to_s%>"/>
+				<%
+			end
+		end
+	end
+	%>
+	
+	<link rel="shortcut icon" href="/assets/gfx/logo_16.png"/>
+	<link href="http://fonts.googleapis.com/css?family=IM+Fell+French+Canon" rel="stylesheet" type="text/css">
+	<link href='http://fonts.googleapis.com/css?family=Dorsa' rel='stylesheet' type='text/css'>
+	
+	<%= stylesheet_link_tag "application" %>
+	<%= stylesheet_link_tag "chrome" if @browser == "chrome" %>
+	<script>
+		var locale = "<%= I18n.locale %>";
+	</script>
+	<% if @track %>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-15959893-4']);
+			_gaq.push(['_setDomainName', 'stoffiplayer.com']);
+			_gaq.push(['_setCustomVar', 1, 'UserType', '<%=user_type%>', 2]);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_setAllowLinker', true]);
+			_gaq.push(['_trackPageLoadTime']);
+
+			(function() {
+			  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	<% end %>
+
+	<!-- Load Twitter JS-API asynchronously -->
+	<script type="text/javascript" charset="utf-8">
+	window.twttr = (function (d,s,id)
+	{
+		var t, js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+		js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+		return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+	}(document, "script", "twitter-wjs"));
+
+	// Wait for the asynchronous resources to load
+	twttr.ready(function(twttr)
+	{
+		_ga.trackTwitter(); //Google Analytics tracking
+	});
+	</script>
+	
+	<%= javascript_include_tag "application" %>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAFQ6PulvKZ8cd4dK4Ex1HLkiVHXzp_izQ&sensor=false">
+	</script>
+	<script src="http://beta.stoffiplayer.com:8081/application.js" type="text/javascript" charset="utf-8">
+	</script>
+	<% unless channels.empty? %>
+		<script type="text/javascript" charset="utf-8">
+			var jug = new Juggernaut({secure: false, host: "beta.stoffiplayer.com", port: 8081});
+			
+			jug.meta =
+			{
+				<%= "user_id: #{@current_user.id}," if @current_user %>
+				<%= "device_id: #{@current_device.id}," if @current_device %>
+				version: "beta"
+			};
+			<% channels.each do |chan| %>
+			jug.subscribe("<%=chan%>", function(data) { console.log(data); eval(data); });
+			<% end %>
+			
+		</script>
+	<% end %>
+
+	<%= csrf_meta_tags %>
+</head>
+
+<body>
+	<header id="header">
+		<div class="blue container">
+			<%= render "pages/header" %>
+		</div>
+	</header>
+	
+	<div class="clear"></div>
+
+	<div id="root"><div id="wrap">
+		<%= yield %>
+		<div class="clear">&nbsp;</div>
+	</div></div>
+	
+	<footer>
+		<p class="copyright">
+			© <%= Time.now.year %> <a href="http://www.simplare.com">simplare</a>
+		</p>
+		<p class="links">
+			<%= link_to t("money.link"),   money_path %>
+			<%= link_to t("legal.link"),   legal_path %>
+			<%= link_to t("contact.link"), contact_path %>
+			<%= link_to t("contribute.link"), "http://dev.stoffiplayer.com/wiki/Welcome?tm=6" %>
+			<%= link_to t("blog"),    "https://blog.stoffiplayer.com" %>
+			<%= link_to t("project"), "http://dev.stoffiplayer.com" %>
+			<% if user_signed_in? %>
+				<%= link_to t("apps.link"), apps_path %>
+			<% end %>
+			<%= link_to t("switch.mobile"), { :mobile => 1 } %>
+		</p>
+	</footer>
+	
+	<div id="dimmer" onclick="closeDialog();" style="display: none;"></div>
+
+	<div id="dialog" class="left" style="display: none;">
+	</div>
+
+	<script>
+		// Facebook
+		/*
+		window.fbAsyncInit = function() {
+			// init the FB JS SDK
+			FB.init({
+			appId      : '243125052401100', // App ID from the App Dashboard
+			channelUrl : '//beta.stoffiplayer.com/channel.html', // Channel File for x-domain communication
+			status     : true, // check the login status upon init?
+			cookie     : true, // set sessions cookies to allow your server to access the session?
+			xfbml      : true  // parse XFBML tags on this page?
+			});
+
+			// Additional initialization code such as adding Event Listeners goes here
+			FB.Event.subscribe('edge.create', function(response)
+			{
+				trackSocial('Facebook', 'Like');
+			});
+			
+			FB.Event.subscribe('edge.remove', function(response)
+			{
+				trackSocial('Facebook', 'Unlike');
+			});
+		};
+		(function(d, debug){	
+			var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement('script'); js.id = id; js.async = true;
+			js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+			ref.parentNode.insertBefore(js, ref);
+		}(document, /*debug*//* false));
+		*/
+		
+		// Google+
+		window.___gcfg = {lang: '<%=I18n.locale%>'};
+		(function()
+		{
+			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/plusone.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+		
+		// Twitter
+		/*
+		window.twttr = (function (d,s,id) {
+			var t, js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+			js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+			return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+		}(document, "script", "twitter-wjs"));
+		*/
+	</script>
+</body>
+</html>

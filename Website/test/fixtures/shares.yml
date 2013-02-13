@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  type: 
+  user_id: 
+  playlist_id: 
+  song_id: 
+  message: MyString
+
+two:
+  type: 
+  user_id: 
+  playlist_id: 
+  song_id: 
+  message: MyString

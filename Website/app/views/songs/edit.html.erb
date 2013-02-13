@@ -1,0 +1,32 @@
+<h1>Editing song</h1>
+
+<%= form_for(@song) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :year %><br />
+    <%= f.text_field :year %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :album_id %><br />
+	<%= f.select :album_id, Album.all.collect { |a| [ a.title, a.id ] }, {:include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :artist_id %><br />
+	<%= f.select :artist_id, Artist.all.collect { |a| [ a.name, a.id ] } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @song %> |
+<%= link_to 'Back', songs_path %>

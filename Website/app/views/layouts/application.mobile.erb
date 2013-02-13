@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+	  xmlns:fb="https://www.facebook.com/2008/fbml"
+	  xml:lang="en" lang="en">
+<head<%= raw " prefix=\""+@head_prefix+"\"" if @head_prefix%>>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="music player, audio player, mp3 player, free music player, free audio player, free mp3 player, stoffiplayer, stoffi" />
+    <meta name="description" content="<%=@description%>" />
+    <meta name="copyright" content="Simplare" />
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+	<title><%= title %></title>
+	
+	<% if controller.controller_name == "pages" and controller.action_name == "download" and @file %>
+		<meta http-equiv="Refresh" Content="2;URL=https://www.stoffiplayer.com<%=@file%>" />
+	<% end %>
+	
+	<%
+	if @meta_tags
+		@meta_tags.each do |meta_tag|
+			if meta_tag[:content] && meta_tag[:content] != ""
+				%>
+				<meta property="<%=meta_tag[:property]%>" content="<%=meta_tag[:content]%>"/>
+				<%
+			end
+		end
+	end
+	%>
+	
+	<link rel="shortcut icon" href="/assets/gfx/logo_16.png"/>
+	
+	<%= stylesheet_link_tag "application" %>
+	<%= stylesheet_link_tag "mobile" %>
+	<script>
+		var locale = "<%= I18n.locale %>";
+	</script>
+	<%= javascript_include_tag "application" %>
+	<%= javascript_include_tag "mobile" %>
+	<%= csrf_meta_tags %>
+	
+	<script src="http://beta.stoffiplayer.com:8081/application.js" type="text/javascript" charset="utf-8"></script>
+	<% unless channels.empty? %>
+		<script type="text/javascript" charset="utf-8">
+			var jug = new Juggernaut({secure: false, host: "beta.stoffiplayer.com", port: 8081});
+			
+			jug.meta =
+			{
+				<%= "user_id: #{@current_user.id}," if @current_user %>
+				<%= "device_id: #{@current_device.id}," if @current_device %>
+				version: "beta"
+			};
+			<% channels.each do |chan| %>
+			jug.subscribe("<%=chan%>", function(data) { eval(data); });
+			<% end %>
+			
+		</script>
+	<% end %>
+</head>
+
+<body>
+
+	<header id="header">
+		<div class="blue container">
+			<%= render "pages/header" %>
+		</div>
+	</header>
+
+	<div id="root">
+		<%= yield %>
+	</div>
+	
+	<footer>
+		<p>© <%= Time.now.year %> <a href="http://www.simplare.com">simplare</a></p>
+		<p>
+			<%= link_to t("contact.link"), contact_path, :class => "link" %> · 
+			<%= link_to t("legal.link"), legal_path, :class => "link" %> · 
+			<%= link_to t("blog"), "https://blog.stoffiplayer.com", :class => "link" %> · 
+			<%= link_to t("project"), "http://dev.stoffiplayer.com", :class => "link" %>
+		</p>
+		<p>
+			<%= link_to t("money.link"), money_path, :class => "link" %> · 
+			<%= link_to t("language.title"), lang_path, :class => "link" %> · 
+			<%= link_to t("switch.desktop"), { :mobile => 0 }, :class => "link" %>
+		</p>
+	</footer>
+	
+	<div id="navigation" style="display:none;">
+		<ul>
+			<li><a onclick="javascript:toggleNavigation();">
+				<%= t "hide" %> ▶
+			</a></li>
+			<li class="separator"></li>
+			<%
+			all_tabs =
+			{
+				:outside =>
+				[
+					{ :name => "news",       :path => news_path, :hidable => true },
+					{ :name => "join",       :path => join_path, :hidable => true },
+				],
+				:inside =>
+				[
+					{ :name => "donations",  :path => new_donation_path, :hidable => true },
+					{ :name => "about",      :path => about_path },
+					{ :name => "news",       :path => news_path },
+					{ :name => "profile",    :path => profile_path },
+					{ :name => "playlists",  :path => playlists_path, :hidable => true }
+				]
+			}
+			tabs = all_tabs[user_signed_in? ? :inside : :outside]
+
+			tabs.each do |tab|
+				if tab[:separator]
+					%>
+					<li class="separator">&nbsp;</li>
+					<%
+				else
+					name = tab[:name]
+					path = tab[:path]
+					css = @tab == name ? "active" : ""
+					disp = tab[:disp] ? tab[:disp] : t("#{name}.link")
+					data = tab[:hidable] ? "yes" : "no"
+					%>
+					<li><%= link_to disp, path, :class => css, :data => { :hidable => data } %></li>
+					<%
+				end
+			end
+			%>
+		</ul>			
+	</div>
+	<script>adaptNavigation();</script>
+</body>
+</html>

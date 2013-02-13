@@ -1,0 +1,30 @@
+<div class="bluebox form">
+	<h1 class="title">Listen</h1>
+	<%= form_for(@listen, :remote => true) do |f| %>
+
+		<% if @listen.errors.any? || flash[:notice] != nil %>
+			<div class="notice">
+				<%= pretty_error @listen %>
+				<%= flash[:notice] %>
+			</div>
+		<% end %>
+
+		<div>
+			<%= f.label :song, "song" %>
+			<%= f.select :song_id, Song.all.collect { |s| [s.title, s.id] } %>
+		</div>
+		
+		<div>
+			<%= label_tag :playlist, "playlist" %>
+			<%= f.select :playlist_id, current_user.playlists.collect { |p| [p.name, p.id] } %>
+		</div>
+	  
+		<div class="bottom">
+			<div class="throw-right">
+				<%= submit_tag "listen", :class => "button" %>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+	<% end %>
+</div>
+

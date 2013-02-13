@@ -1,0 +1,75 @@
+<% if @artist %>
+
+	<%= div_for @artist, :class => "item" do %>
+	
+		<table>
+			<tr>
+				<td class="picture">
+					<div class="clip">
+						<%= link_to image_tag(@artist.pic), @artist %>
+					</div>
+				</td>
+				<td class="content">
+					<span class='title'>
+						<%=link_to(@artist.name.strip, @artist)%>
+					</span>
+					
+					<% if @options[:show] == :pending %>
+						<span><%=t "donations", :count => @artist.pending.count %></span>
+						<span><%=t "donation_sum.total", :sum => "$#{@artist.pending_sum}" %></span>
+						<span>
+							<%= form_for @artist, :format => :json, :remote => true, :method => :put do |f| %>
+								<%= select_tag "donation[status]", options_for_select([
+									[t("donate.status.pending"), "pending"],
+									[t("donate.status.delivered"), "delivered"],
+									[t("donate.status.confirmed"), "confirmed"],
+									[t("donate.status.returned"), "returned"],
+									[t("donate.status.failed"), "failed"] ]),
+									:onchange => "$('#edit_artist_#{@artist.id}').submit();",
+									:id => "donation_status_#{@artist.id}"
+								%>
+								<%= hidden_field_tag "donation_update", "1" %>
+								<%= image_tag "gfx/ajax_loading_small_blue.gif",
+									:id => "edit_artist_#{@artist.id}_loading",
+									:style => "display:none;"	%>
+								<script>
+									$("#edit_artist_<%=@artist.id%>")
+									.bind('ajax:beforeSend', function()
+									{
+										console.log("start");
+										$("#edit_artist_<%=@artist.id%>_loading").show();
+									})
+									.bind('ajax:success', function()
+									{
+										console.log("success");
+										$("#edit_artist_<%=@artist.id%>_loading").hide();
+									})
+									.bind('ajax:error', function()
+									{
+										console.log("fail");
+										$("#edit_artist_<%=@artist.id%>_loading").hide();
+										$("#donation_status_<%=@artist.id%>").val('pending');
+									});
+								</script>
+							<% end %>
+						</span>
+					<% elsif @options[:show] == :donations %>
+						<span><%=t "donations", :count => @artist.donated.count %></span>
+						<span><%=t "donation_sum.total", :sum => "$#{@artist.donated_sum}" %></span>
+						<span><%=t "donation_sum.charity", :sum => "$#{@artist.charity_sum}" %></span>
+					
+					<% else %>
+						<span><%=t "plays", :count => @artist.listens.count %></span>
+						<% if user_signed_in? %>
+							<span>
+								<%=t "user_plays", :count => @artist.listens.where("user_id = #{current_user.id}").count %>
+							</span>
+						<% end %>
+					<% end %>
+				</td>
+			</tr>
+		</table>
+		
+	<% end %>
+	
+<% end %>

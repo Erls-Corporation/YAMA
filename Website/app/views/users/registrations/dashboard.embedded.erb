@@ -1,0 +1,107 @@
+<% if false %>
+<%
+providers =
+[
+	{ :name => "Twitter" },
+	{ :name => "Facebook" },
+	{ :name => "Google", :link_name => "google_oauth2" },
+	{ :name => "Vimeo" },
+	{ :name => "LinkedIn" },
+	{ :name => "SoundCloud" }
+]
+%>
+
+<%= t "dashboard.logged_in", :name => current_user.name, :email => current_user.email %>
+
+<p>&nbsp;</p>
+
+<table class="root-link-table" id="root">
+	<tr>
+		<td>
+			<table class="link-table">
+				<tr>
+					<th></th>
+					<th><%=t "settings.links.share.label" %></th>
+					<th><%=t "settings.links.donate" %></th>
+					<!--<th><%=t "settings.links.listen" %></th>-->
+					<th></th>
+				</tr>
+				<%
+				i = 0
+				providers.each do |provider|
+					%>				
+					<tr>
+						<%
+						p = provider[:name]
+						ln = provider[:link_name] || p.downcase
+						l = current_user.links.find_by_provider(ln)
+						c = l ? "active" : "inactive"
+						a = l ? "unlink":"link"
+						title = t("auth.#{a}", :service => p)
+						%>
+						<td class="<%=c%>"><%= p %></td>
+						<td>
+							<% if l && l.can_share? %>
+								<%= form_tag link_path(l), :method => :put do %>
+									<%= hidden_field_tag "link[do_share]", "0" %>
+									<%= check_box_tag "link[do_share]", "1", l.do_share, :onchange => "submit();" %>
+								<% end %>
+							<% else %>
+								N/A
+							<% end %>
+						</td>
+						<td>
+							<% if l && l.can_donate? %>
+								<%= form_tag link_path(l), :method => :put do %>
+									<%= hidden_field_tag "link[do_donate]", "0" %>
+									<%= check_box_tag "link[do_donate]", "1", l.do_donate, :onchange => "submit();" %>
+								<% end %>
+							<% else %>
+								N/A
+							<% end %>
+						</td>
+						<!--
+						<td>
+							<% if l && l.can_listen? %>
+								<%= check_box_tag p + "_listen", "1", l.do_listen, :onclick => "" %>
+							<% end %>
+						</td>
+						-->
+						<td>
+							<% if l %>
+								<%= button_to t("settings.links.unlink"), l,
+										:confirm => "Are you sure you want to unlink from #{p}?",
+										:method => :delete,
+										:class => "button",
+										:id => "button_#{p}",
+										:title => title %>
+							<% else %>
+								<%= button_to t("settings.links.link"), "/auth/#{ln}", 
+										:class => "button",
+										:id => "button_#{p}",
+										:title => title %>
+							<% end %>
+							<script>$('#button_<%=p%>').blur();</script>
+						</td>
+					</tr>
+					<%
+					i += 1
+					if false && i % 4 == 0 %>
+			</table>
+		</td>
+		<td>
+			<table class="link-table">
+				<tr>
+					<th></th>
+					<th><%=t "settings.links.share.label" %></th>
+					<th><%=t "settings.links.donate" %></th>
+					<!--<th><%=t "settings.links.listen" %></th>-->
+					<th></th>
+				</tr>
+					<% end %>
+				<% end %>
+			</table>
+		</td>
+	</tr>
+</table>
+<% end %>

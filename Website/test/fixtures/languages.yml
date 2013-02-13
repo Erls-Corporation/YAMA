@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  native_name: MyString
+  english_name: MyString
+  iso_tag: MyString
+  ietf_tag: MyString
+
+two:
+  native_name: MyString
+  english_name: MyString
+  iso_tag: MyString
+  ietf_tag: MyString

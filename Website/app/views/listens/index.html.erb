@@ -1,0 +1,41 @@
+<div class="column throw-right">
+	<%= render :partial => "sidebars/user" %>
+</div>
+
+<div class="main">
+	<div class="goldenbox">
+		<% if @listens.any? %>
+			<div class="engraved">
+				<ul id="listens">
+					<% @listens.each do |listen| %>
+						<li class="listen" id="listen_<%=listen.id%>">
+							<% if listen.user %>
+								<%= link_to listen.user.name, profile_path(listen.user) %> 
+							<% else %>
+								Someone
+							<% end %>
+							listened to 
+							<% if listen.song %>
+								<%= pretty_link(listen.song) %>
+							<% else %>
+								something
+							<% end %>
+							<% if listen.playlist %>
+								in <%= link_to listen.playlist.name, listen.playlist %>
+							<% end %>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+			<div class="notice">
+				put filters here...
+			</div>
+		<% else %>
+			<div class="notice engraved">
+				You have no listens yet.
+			</div>
+		<% end %>
+	</div>
+	
+	<%= render "form" %>
+</div>

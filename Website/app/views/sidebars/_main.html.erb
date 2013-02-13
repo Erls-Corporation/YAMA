@@ -1,0 +1,57 @@
+<%= render :partial => "sidebars/activity" if user_signed_in? %>
+
+<div class="ingraved box">
+	<h1><%=t "side.features.title" %></h1>
+	<ul class="tick">
+		<%=t "side.features.list_html" %>
+	</ul>
+</div>
+
+<% if image_ads? %>
+	<div class="ingraved box ad">
+		<% if true or Rails.env == "production" %>
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-5639501338860736";
+			/* Sidebar */
+			google_ad_slot = "4330960222";
+			google_ad_width = 250;
+			google_ad_height = 250;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+
+		<% else %>
+			<div style="height: 250px; width: 250px"></div>
+		<% end %>
+	</div>
+<% end %>
+
+<div class="ingraved box">
+	<h1><%=t "donations.title" %></h1>
+	<%=t "donations.short_front_text_html" %>
+	<div class="center">
+		<%=button_tag t("donations.button"), "donate()", "dollar", { :type => :function, :color => :gold } %>
+	</div>
+</div>
+
+<div class="ingraved box">
+	<h1><%=t "side.follow.title" %></h1>
+	<ul class="large">
+	
+		<%
+		links =
+		[
+			{:name => "Twitter", :img => "twitter", :url => "https://twitter.com/stoffiplayer"},
+			{:name => "Facebook", :img => "facebook", :url => "https://facebook.com/stoffiplayer"},
+			{:name => "YouTube", :img => "youtube", :url => "https://youtube.com/stoffiplayer"},
+			{:name => "Google+", :img => "googleplus", :url => "https://plus.google.com/b/111751169971055410532"},
+			{:name => "Blogger", :img => "blogger", :url => "http://blog.stoffiplayer.com"}
+		]
+		%>
+		<% links.each do |l| %>
+			<li class="center"><%=button_tag t("side.follow.link", :service => l[:name]), l[:url], l[:img], { :width => 140, :color => :blue } %></li>
+		<% end %>
+	</ul>
+</div>

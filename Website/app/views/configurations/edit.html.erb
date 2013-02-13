@@ -1,0 +1,133 @@
+<h1>Editing configuration</h1>
+
+<%= form_for(@configuration) do |f| %>
+  <%= pretty_error @configuration %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :media_state %><br />
+	<%= f.select :media_state, [
+		["Playing", "Playing"],
+		["Paused", "Paused"],
+		["Stopped", "Stopped"],
+		["Ended", "Ended"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :current_track_id %><br />
+	<%= f.select :current_track_id, Song.all.collect { |s| [ s.artist.name + " - " + s.title, s.id ] } %>
+  </p>
+  <p>
+    <%= f.label :currently_selected_navigation %><br />
+	<%= f.select :currently_selected_navigation, [
+		["Now playing", "NowPlaying"],
+		["Music", "Music"],
+		["Files", "Files"],
+		["YouTube", "YouTube"],
+		["History", "History"],
+		["Queue", "Queue"],
+		["Playlists", "Playlists"]
+		]  + Playlist.all.collect { |pl| [ pl.name + " by " + pl.user.pretty_name(current_user), "playlist:" + pl.name ] }%>
+  </p>
+  <p>
+    <%= f.label :currently_active_navigation %><br />
+	<%= f.select :currently_active_navigation, [
+		["Files", "Files"],
+		["YouTube", "YouTube"],
+		]  + Playlist.all.collect { |pl| [ pl.name + " by " + pl.user.pretty_name(current_user), "playlist:" + pl.name ] }%>
+  </p>
+  <p>
+    <%= f.label :shuffle %><br />
+	<%= f.select :shuffle, [
+		["Off", "Off"],
+		["Random", "Random"],
+		["Mind reader", "MindReader"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :repeat %><br />
+	<%= f.select :repeat, [
+		["Off", "NoRepeat"],
+		["All", "RepeatAll"],
+		["One", "RepeatOne"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :volume %><br />
+	<input type="range" min="0" max="100" id="configuration_volume" name="configuration[volume]" value="<%=@configuration.volume%>"/>
+  </p>
+  <p>
+    <%= f.label :seek %><br />
+	<input type="range" min="0" max="100" id="configuration_seek" name="configuration[seek]" value="<%=@configuration.seek%>"/>
+  </p>
+  <p>
+    <%= f.label :search_policy %><br />
+	<%= f.select :search_policy, [
+		["Same search everywhere", "Global"],
+		["Same search for all playlists", "Partial"],
+		["Different search for each list", "Individual"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :upgrade_policy %><br />
+	<%= f.select :upgrade_policy, [
+		["Upgrade automatically", "Automatic"],
+		["Notify me when I can upgrade", "Notice"],
+		["Let me check for upgrades", "Manual"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :add_policy %><br />
+	<%= f.select :add_policy, [
+		["Don't add", "DoNotAdd"],
+		["Add to library", "Library"],
+		["Add to library and current playlist", "LibraryAndPlaylist"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :play_policy %><br />
+	<%= f.select :play_policy, [
+		["Don't play", "DoNotPlay"],
+		["Play", "Play"],
+		["Add to end of queue", "BackOfQueue"],
+		["Add to front of queue", "FrontOfQueue"] ]
+	%>
+  </p>
+  <p>
+    <%= f.label :history_list_config %><br />
+	<%= f.select :history_list_config, current_user.list_configs.all.collect { |lc| [ lc.id, lc.id ] } %>
+  </p>
+  <p>
+    <%= f.label :queue_list_config %><br />
+	<%= f.select :queue_list_config, current_user.list_configs.all.collect { |lc| [ lc.id, lc.id ] } %>
+  </p>
+  <p>
+    <%= f.label :files_list_config %><br />
+	<%= f.select :files_list_config, current_user.list_configs.all.collect { |lc| [ lc.id, lc.id ] } %>
+  </p>
+  <p>
+    <%= f.label :youtube_list_config %><br />
+	<%= f.select :youtube_list_config, current_user.list_configs.all.collect { |lc| [ lc.id, lc.id ] } %>
+  </p>
+  <p>
+    <%= f.label :sources_list_config %><br />
+	<%= f.select :sources_list_config, current_user.list_configs.all.collect { |lc| [ lc.id, lc.id ] } %>
+  </p>
+  <p>
+    <%= f.label :current_shortcut_profile_id %><br />
+	<%= f.select :current_shortcut_profile_id, current_user.keyboard_shortcut_profiles.all.collect { |ksp| [ ksp.name, ksp.id ] } %>
+  </p>
+  <p>
+    <%= f.label :current_equalizer_profile_id %><br />
+	<%= f.select :current_equalizer_profile_id, current_user.equalizer_profiles.all.collect { |ep| [ ep.name, ep.id ] } %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @configuration %> |
+<%= link_to 'Back', configurations_path %>

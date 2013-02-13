@@ -1,0 +1,41 @@
+<h1>Listing link</h1>
+
+<% if @links %>
+	<% unless @links.empty? %>
+		<p><strong>You are linked with:</strong></p>
+		<div class="links">
+			<% for link in @links %>
+				<div class="link">
+					<%= image_tag "auth_buttons/#{link.provider}_32.png", :size => "32x32" %>
+					<div class="provider"><%= link.provider %></div>
+					<div class="uid"><%= link.uid %></div>
+					<%= link_to "X", link, 
+						:confirm => "Are you sure you want to unlink with #{link.provider}?",
+						:method => :delete,
+						:class => "remove" %>
+				</div>
+			<% end %>
+			<div class="clear"></div>
+		</div>
+	<% end %>
+	<p><strong>Link with another service:</strong></p>
+<% else %>
+	<p><strong>Link with these services:</strong></p>
+<% end %>
+
+<a href="/auth/twitter" class="auth_provider">
+	<%= image_tag "auth_buttons/twitter_64.png", :size => "64x64", :alt => "Twitter" %>
+	Twitter
+</a>
+
+<a href="/auth/facebook" class="auth_provider">
+	<%= image_tag "auth_buttons/facebook_64.png", :size => "64x64", :alt => "Facebook" %>
+	Facebook
+</a>
+
+<a href="/auth/google" class="auth_provider">
+	<%= image_tag "auth_buttons/google_64.png", :size => "64x64", :alt => "Google" %>
+	Google
+</a>
+
+<div class="clear"></div>

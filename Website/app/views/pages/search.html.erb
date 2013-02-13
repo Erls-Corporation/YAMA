@@ -1,0 +1,23 @@
+<div id="main">
+	<div class="white box">
+		<h1><%=h params[:q]%></h1>
+		<div class="list">
+			<% currentCat = nil %>
+			<% @result.each do |i| %>
+				<% if currentCat != i[:category] %>
+					<%=raw "</ul>" unless currentCat == nil %>
+					<h2><%=i[:category]%></h2>
+					<ul class="vertical">
+					<% currentCat = i[:category] %>
+				<% end %>
+				
+				<%=item i[:display], i, i[:field], :link => i[:url], :image => i[:icon], :image_size => 12 %>
+			<% end %>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="sidebar">
+	<%= render :partial => "sidebars/main" %>
+</div>

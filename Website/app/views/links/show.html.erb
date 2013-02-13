@@ -1,0 +1,18 @@
+<p>
+  <b>User:</b>
+  <%=h @link.user_id %>
+</p>
+
+<p>
+  <b>Provider:</b>
+  <%=h @link.provider %>
+</p>
+
+<p>
+  <b>Uid:</b>
+  <%=h @link.uid %>
+</p>
+
+
+<%= link_to 'Edit', edit_link_path(@link) %> |
+<%= link_to 'Back', links_path %>

@@ -1,0 +1,99 @@
+<div class="white box" id="download">
+	<% if @type == "checksum" %>
+		<div id="download-start">
+			<h1><%= t "check.brief.title" %></h1>
+			<p><%=raw t("check.brief.text") %></p>
+		</div>
+		
+		<div id="download-instructions-wide">
+			<div class="download-instruction">
+				<h1>1. <%= t "check.install.title" %></h1>
+				<p><%= t "check.install.text_html", :link => link_to("md5deep", "http://md5deep.sourceforge.net/") %></p>
+			</div>
+			
+			<div class="download-instruction">
+				<h1>2. <%= t "check.get.title" %></h1>
+				<p><%= t "check.get.text_html", :click_here => link_to(t("check.file"), @file) %></p>
+					<%= image_tag "installation/files.png" %>
+				<p class="notice"><%= t "check.get.notice_html" %></p>
+			</div>
+			
+			<div class="download-instruction">
+				<h1>3. <%= t "check.run.title" %></h1>
+				<p><%= t "check.run.text_html", :fname => @fname %></p>
+					<%= image_tag "installation/command.png" %>
+			</div>
+			
+			<div class="download-instruction">
+				<h1>4. <%= t "check.verify.title" %></h1>
+				<p><%= t "check.verify.text" %></p>
+					<%= image_tag "installation/output.png" %>
+			</div>
+		</div>
+
+	<% else %>
+		<div id="download-start">
+			<h1><%=t "get.thanks" %></h1>
+			<p><%=t "get.manual_start_html", :click_here => link_to(t("get.click_here"), @file) %></p>
+		</div>
+
+
+		<div id="download-instructions">
+			<% if @browser == "firefox" %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.firefox", :fname => @fname %></p>
+					<%= image_tag "installation/firefox.jpg" %>
+				</div>
+
+			<% elsif @browser == "chrome" %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.chrome", :fname => @fname %></p>
+					<%= image_tag "installation/chrome.jpg" %>
+				</div>
+
+			<% elsif @browser == "opera" %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.opera", :fname => @fname %></p>
+					<%= image_tag "installation/opera.jpg" %>
+				</div>
+
+			<% elsif @browser == "safari" %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.safari", :fname => @fname %></p>
+					<%= image_tag "installation/safari.jpg" %>
+				</div>
+
+			<% elsif @browser == "ie" %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.ie", :fname => @fname %></p>
+					<%= image_tag "installation/ie.jpg" %>
+				</div>
+
+			<% else %>
+				<div class="download-instruction">
+					<h1>1. <%=t "get.instruction1.title" %></h1>
+					<p><%=t "get.instruction1.text.ie", :fname => @fname %></p>
+					<%= image_tag "installation/ie.jpg" %>
+				</div>
+
+			<% end %>
+			
+			<div class="download-instruction">
+				<h1>2. <%=t "get.instruction2.title" %></h1>
+				<p><%=t "get.instruction2.text" %></p>
+				<%= image_tag "installation/security.jpg" %>
+			</div>
+
+			<div class="download-instruction">
+				<h1>3. <%=t "get.instruction3.title" %></h1>
+				<p><%=t "get.instruction3.text" %></p>
+				<%= image_tag "installation/setup.jpg" %>
+			</div>
+		</div>
+	<% end %>
+</div>

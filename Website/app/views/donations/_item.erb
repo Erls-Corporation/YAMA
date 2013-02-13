@@ -1,0 +1,107 @@
+<% if @donation %>
+
+	<%= div_for @donation, :class => "item" do %>
+	
+		<table>
+			<tr>
+				<td class="picture">
+					<div class="clip">
+						<%= link_to image_tag(@donation.artist.pic), @donation.artist %>
+					</div>
+				</td>
+				<td class="content">
+					<span class='title'>
+						<%=link_to(@donation.artist.name.strip, @donation.artist)%>
+					</span>
+					<% if @options[:admin] == true %>
+						<span><%= t "datetime.ago", :ago => time_ago_in_words(@donation.created_at) %></span>
+						<span>
+							$<%= @donation.amount %>
+								(<%=t "donate.distribution.charity"%>: $<%= @donation.charity %>,
+								<%=t "donate.distribution.stoffi"%>: $<%= @donation.stoffi %>,
+								<%= "#{@donation.artist.name.strip}: $#{@donation.artist_share}" %>)
+						</span>
+						<span>
+							<%= form_for @donation, :format => :json, :remote => true, :method => :put do |f| %>
+								<%= f.select :status, [
+									[t("donate.status.pending"), "pending"],
+									[t("donate.status.delivered"), "delivered"],
+									[t("donate.status.confirmed"), "confirmed"],
+									[t("donate.status.revoked"), "revoked"],
+									[t("donate.status.returned"), "returned"],
+									[t("donate.status.failed"), "failed"] ],
+									{},
+									{
+										:onchange => "$('#edit_donation_#{@donation.id}').submit();",
+										:id => "donation_status_#{@donation.id}"
+									}
+								%>
+								<%= image_tag "gfx/ajax_loading_small_blue.gif",
+									:id => "edit_donation_#{@donation.id}_loading",
+									:style => "display:none;" %>
+								<script>
+									$("#edit_donation_<%=@donation.id%>")
+									.bind('ajax:beforeSend', function()
+									{
+										console.log("start");
+										$("#edit_donation_<%=@donation.id%>_loading").show();
+									})
+									.bind('ajax:success', function()
+									{
+										console.log("success");
+										$("#edit_donation_<%=@donation.id%>_loading").hide();
+									})
+									.bind('ajax:error', function()
+									{
+										console.log("fail");
+										$("#edit_donation_<%=@donation.id%>_loading").hide();
+										$("#donation_status_<%=@donation.id%>").val("<%=@donation.status%>");
+									});
+								</script>
+							<% end %>
+						</span>
+					<% else %>
+						<span><%= t "datetime.ago", :ago => time_ago_in_words(@donation.created_at) %></span>
+						<span>
+							$<%= @donation.amount %>
+								(<%=t "donate.distribution.charity"%>: $<%= @donation.charity %>,
+								<%=t "donate.distribution.stoffi"%>: $<%= @donation.stoffi %>,
+								<%= "#{@donation.artist.name.strip}: $#{@donation.artist_share}" %>)
+						</span>
+						<span>
+							<%=t "donate.status.label"%>: <span id="status_<%=@donation.id%>" class="inline"><%= t "donate.status.#{@donation.status}" %></span>
+							<% if @donation.revokable? %>
+								<span id="revoke_<%=@donation.id%>" class="inline">
+								- <%= link_to t("donate.revoke"),
+									"#{donation_url(@donation, :format => :json)}?donation[status]=revoked",
+									:method => :put, :remote => true, :id => "revoke_link_#{@donation.id}",
+									:title => t("donate.revoke_tooltip") %>
+								</span>
+							<% end %>
+							<script>
+								$("#revoke_link_<%=@donation.id%>")
+								.bind('ajax:beforeSend', function()
+								{
+									$("#status_<%=@donation.id%>").text("<%=t "donate.status.revoked" %>");
+									$("#revoke_<%=@donation.id%>").hide();
+									console.log("start");
+								})
+								.bind('ajax:success', function()
+								{
+									console.log("success");
+								})
+								.bind('ajax:error', function()
+								{
+									$("#status_<%=@donation.id%>").text("<%=t "donate.status.#{@donation.status}" %>");
+									$("#revoke_<%=@donation.id%>").show();
+									console.log("fail");
+								});
+							</script>
+						</span>
+					<% end %>
+				</td>
+			</tr>
+		</table>
+		
+	<% end %>
+<% end %>

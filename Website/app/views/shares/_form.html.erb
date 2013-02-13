@@ -1,0 +1,54 @@
+<div class="bluebox form">
+	<h1 class="title">Share</h1>
+	<%= form_for(@share, :url => shares_path) do |f| %>
+
+		<% if @share.errors.any? || flash[:notice] != nil %>
+			<div class="notice">
+				<%= pretty_error @share %>
+				<%= flash[:notice] %>
+			</div>
+		<% end %>
+
+		<div>
+			<%= f.label :object, "object" %>
+			<%= f.text_field :object, :class => "field", :size => 40 %>
+		</div>
+		
+		<div>
+			<%= label_tag :song_path, "song path" %>
+			<%= text_field_tag :song_path, params[:song_path], :class => "field", :placeholder => "song path" %>
+		</div>
+		
+		<div>
+			<%= label_tag :song_title, "song" %>
+			<%= text_field_tag :song, params[:song], :class => "field", :placeholder => "song id/title" %>
+		</div>
+		
+		<div>
+			<%= label_tag :artist_value, "artist" %>
+			<%= text_field_tag :artist, params[:artist], :class => "field", :placeholder => "artist" %>
+		</div>
+		
+		<div>
+			<%= label_tag :album_value, "album" %>
+			<%= text_field_tag :album, params[:album], :class => "field", :placeholder => "album" %>
+		</div>
+		
+		<div>
+			<%= label_tag :playlist, "playlist" %>
+			<%= text_field_tag :playlist, params[:playlist], :class => "field", :placeholder => "playlist" %>
+		</div>
+
+		<div>
+			<%= f.label :message, "message" %>
+			<%= f.text_field :message, :class => "field", :size => 40 %>
+		</div>
+	  
+		<div class="bottom">
+			<div class="throw-right">
+				<%= submit_tag "share", :class => "button" %>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+	<% end %>
+</div>

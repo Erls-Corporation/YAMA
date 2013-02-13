@@ -1,0 +1,23 @@
+<p>
+	<b>Configuration:</b>
+	<%=link_to @source.configuration.name, configuration_path(@source.configuration) if @source.configuration %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%=h @source.type %>
+</p>
+
+<p>
+  <b>Data:</b>
+  <%=h @source.data %>
+</p>
+
+<p>
+  <b>Include:</b>
+  <%=h @source.include %>
+</p>
+
+
+<%= link_to 'Edit', edit_source_path(@source) %> |
+<%= link_to 'Back', sources_path %>

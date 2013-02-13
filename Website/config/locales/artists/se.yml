@@ -1,0 +1,16 @@
+se:
+  artists:
+    points: "Dina fan-poäng"
+    unknown: "Okänd artist"
+    songs:
+      title: "Låtar"
+      remove: "Ta bort %{artist} som skapare av %{song}"
+      empty: "%{artist} har inte gjort några låtar"
+      
+    places:
+      title: "Andra ställen"
+      
+    support:
+      title: "Stöd"
+      charity: "Välgörenhet"
+    

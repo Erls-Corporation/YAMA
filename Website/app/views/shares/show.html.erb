@@ -1,0 +1,24 @@
+<div class="column throw-right">
+	<%= render :partial => "sidebars/user" %>
+</div>
+
+<div class="main">
+	<div class="goldenbox">
+		<h1 class="title">Shares</h1>
+		<% if @shares.any? %>
+			<div class="engraved">
+				<% @shares.each do |share| %>
+					Share
+				<% end %>
+			</div>
+		<% else %>
+			<div class="notice engraved">
+				You have no shares yet.
+			</div>
+		<% end %>
+	</div>
+	<div class="bluebox form">
+		<h1 class="title">Share</h1>
+		<%= render "form" %>
+	</div>
+</div>

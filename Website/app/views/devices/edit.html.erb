@@ -1,0 +1,24 @@
+<h1>Editing device</h1>
+
+<%= form_for(@device) do |f| %>
+  <%= pretty_error(@device) %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :last_ip %><br />
+    <%= f.text_field :last_ip %>
+  </p>
+  <p>
+    <%= f.label :version %><br />
+    <%= f.text_field :version %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @device %> |
+<%= link_to 'Back', devices_path %>

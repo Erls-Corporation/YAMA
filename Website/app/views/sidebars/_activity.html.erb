@@ -1,0 +1,29 @@
+<!--
+<div class="bluebox">
+	<h1 class="title"><%=t "side.activity.title" %></h1>
+	<% if current_user.shares.count > 0 %>
+		<% current_user.shares.each do |share| %>
+		
+			<% if share.object == "song" %>
+				<p><%= t "side.activity.share_html",
+					:person => t("you"),
+					:obj => pretty_link(share.song) %></p>
+					
+			<% elsif share.object == "playlist" %>
+				<p><%= t "side.activity.share_html",
+					:person => t("you"),
+					:obj => link_to(share.playlist.name, share.playlist) %></p>
+			<% end %>
+		<% end %>
+	<% end %>
+	-->
+	<!--
+	<p>A friend shared</p>
+	<p>You listened</p>
+	<p>A device connected</p>
+	<p>An app was authorized</p>
+	<p>A login occured</p>
+	-->
+<!--
+</div>
+-->

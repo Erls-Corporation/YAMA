@@ -1,0 +1,31 @@
+<div id="main">
+	<div class="white box">
+		<% if user_signed_in? %>
+			<h1><%=t "playlists.title.you" %></h1>
+			<ul class="horizontal" data-field="personal-playlists">
+				<% @personal.each do |playlist| %>
+					<%= item playlist.name, playlist, "playlist-#{playlist.id}",
+							:image => playlist.picture %>
+				<% end %>
+			</ul>
+			<p class="message" data-field="no-personal-playlists"<%= "style='display:none;'" if @personal.length > 0 %>>
+				<%=t "playlists.empty.you" %>
+			</p>
+		<% end %>
+		
+		<h1><%=t "playlists.title.global" %></h1>
+		<ul class="horizontal" data-field="global-playlists">
+			<% @global.each do |playlist| %>
+				<%= item playlist.name, playlist, "playlist-#{playlist.id}",
+						:image => playlist.picture %>
+			<% end %>
+		</ul>
+		<p class="message" data-field="no-global-playlists"<%= "style='display:none;'" if @global.length > 0 %>>
+			<%=t "playlists.empty.all" %>
+		</p>
+	</div>
+</div>
+
+<div id="sidebar">
+	<%= render :partial => "sidebars/music" %>
+</div>

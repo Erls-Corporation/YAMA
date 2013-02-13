@@ -1,0 +1,27 @@
+<% if @playlist %>
+
+	<%= div_for @playlist, :class => "item" do %>
+
+		<span class="clip">
+			<%= image_tag(@playlist.picture) %>
+		</span>
+		<div class="content">
+			<span class='title'><%=link_to(@playlist.name.strip, @playlist)%></span>
+			<span>
+				<% if @playlist.user == nil %>
+					No user?
+				<% else %>
+					<%=raw t("by", :name => @playlist.user.name) %>
+				<% end %>
+			</span>
+			<span><%=t "plays", :count => @playlist.listens.count %></span>
+			<% if user_signed_in? %>
+				<span>
+					<%=t "user_plays", :count => @playlist.listens.where("user_id = #{current_user.id}").count %>
+				</span>
+			<% end %>
+		</div>
+		
+	<% end %>
+	
+<% end %>

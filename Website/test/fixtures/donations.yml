@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  artist_id: 1
+  artist_percentage: 1
+  stoffi_percentage: 1
+  charity_percentage: 1
+  amount: 1
+  user_id: 1
+
+two:
+  artist_id: 1
+  artist_percentage: 1
+  stoffi_percentage: 1
+  charity_percentage: 1
+  amount: 1
+  user_id: 1
